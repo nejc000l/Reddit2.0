@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Image from "next/image";
-import { signIn,useSession,signOut} from "next-auth/react";
+import { signIn, useSession, signOut } from "next-auth/react";
 import {
+  XCircleIcon,
   BellIcon,
   ChatBubbleLeftIcon,
   ChevronDownIcon,
@@ -17,9 +18,10 @@ import {
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 function Header() {
-  const {data:session} = useSession();
-  
-  return(
+  const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+  console.log(isOpen);
+  return (
     <div className=" sticky top-0 z-50 flex bg-white px-4 py-2 shadow-sm ">
       <div className="relative h-20 w-20 flex-shrink-0 cursor-pointer">
         <Link href="/">
@@ -29,7 +31,6 @@ function Header() {
             layout="fill"
           />
         </Link>
-
       </div>
       <div className="mx-7 flex items-center xl:min-w-[300px]">
         <HomeIcon className="h-5 w-5 cursor-pointer" />
@@ -46,20 +47,33 @@ function Header() {
         />
         <button type="submit" hidden></button>
       </form>
-      <div className="hidden mx-5 items-center space-x-2 text-gray-500 lg:inline-flex">
-        <SparklesIcon className="icon" />
-        <GlobeAltIcon className="icon" />
-        <VideoCameraIcon className="icon" />
-        <hr className="h-10 border border-gray-100" />
-        <ChatBubbleLeftIcon className="icon" />
-        <BellIcon className="icon" />
-        <PlusIcon className="icon" />
-        <SpeakerWaveIcon className="icon" />
-      </div>
-      <div className="ml-5 flex items-center lg:hidden">
-        <Bars3Icon className="icon" />
-      </div>
-      
+      {!isOpen ? (
+        <div
+          onClick={() => setIsOpen(!isOpen)}
+          className="ml-5 flex items-center "
+        >
+          <Bars3Icon className="icon items-center " />
+        </div>
+      ) : (
+        <div
+          className={`mx-5 items-center  space-x-2 text-gray-500 lg:inline-flex`}
+        >
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="ml-[.6rem]"
+          >
+          <XCircleIcon className=" icon " />
+          </div>
+          <SparklesIcon className="icon" />
+          <GlobeAltIcon className="icon" />
+          <VideoCameraIcon className="icon" />
+          <ChatBubbleLeftIcon className="icon" />
+          <BellIcon className="icon" />
+          <PlusIcon className="icon" />
+          <SpeakerWaveIcon className="icon" />
+        </div>
+      )}
+
       {session ? (
         <div
           onClick={() => signOut()}
@@ -76,9 +90,8 @@ function Header() {
           <div className="flex-1 text-xs ">
             <p className="truncate">{session.user?.name}</p>
             <p className="text-gray-400">Sign Out </p>
-
           </div>
-          <ChevronDownIcon className="h-5 flex-shrink-0 text-gray"/>
+          <ChevronDownIcon className="h-5 flex-shrink-0 text-gray" />
         </div>
       ) : (
         <div
